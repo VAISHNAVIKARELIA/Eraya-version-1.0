@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Lab 3 — LOC Estimation & COCOMO</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; max-width:900px; margin:40px auto; line-height:1.55; color:#111; padding:0 20px; }
+    h1, h2 { color:#1a56db; }
+    table { border-collapse:collapse; width:100%; margin:12px 0 20px; }
+    th, td { padding:8px 10px; border:1px solid #ddd; text-align:left; }
+    th { background:#f4f6fb; }
+    pre { background:#fafafa; border:1px solid #eee; padding:12px; overflow:auto; }
+    .note { font-size:0.95rem; color:#333; background:#f8fafc; padding:10px; border-left:4px solid #1a56db; }
+  </style>
+</head>
+<body>
+
+  <h1>Lab 3 — LOC Estimation & Basic COCOMO</h1>
+
+  <section>
+    <h2>1. Estimated Lines of Code (LOC) — Module Breakdown</h2>
+    <p>Estimated LOC for the Recruitment & Networking Platform (student project estimate).</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Module</th>
+          <th style="text-align:right">Estimated LOC</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Auth & profile (backend + models)</td><td style="text-align:right">600</td></tr>
+        <tr><td>Frontend common (layout, CSS, JS)</td><td style="text-align:right">400</td></tr>
+        <tr><td>Job posting & search</td><td style="text-align:right">500</td></tr>
+        <tr><td>Application workflow</td><td style="text-align:right">400</td></tr>
+        <tr><td>Connections & messaging</td><td style="text-align:right">600</td></tr>
+        <tr><td>Admin & reports</td><td style="text-align:right">300</td></tr>
+        <tr><td>Tests & config</td><td style="text-align:right">200</td></tr>
+        <tr><th>TOTAL</th><th style="text-align:right">3,000</th></tr>
+      </tbody>
+    </table>
+
+    <p><strong>KLOC = TOTAL LOC / 1000 = 3000 / 1000 = <em>3.0 KLOC</em></strong></p>
+  </section>
+
+  <section>
+    <h2>2. Basic COCOMO (Organic) — Formula & Calculation</h2>
+    <p>We use the Basic COCOMO model (Organic mode) with standard coefficients:</p>
+    <ul>
+      <li><strong>Effort (Person-Months)</strong> = a * (KLOC)<sup>b</sup> &nbsp; where a = 2.4, b = 1.05</li>
+      <li><strong>Development Time (Months)</strong> = c * (Effort)<sup>d</sup> &nbsp; where c = 2.5, d = 0.38</li>
+    </ul>
+
+    <h3>Step-by-step arithmetic (digit-by-digit explanation)</h3>
+    <pre>
+Given:
+  KLOC = 3.0
+  a = 2.4
+  b = 1.05
+  c = 2.5
+  d = 0.38
+
+1) Compute (KLOC)^b = 3.0^1.05
+   Break into 3.0^(1.00) * 3.0^(0.05)
+   3.0^1.00 = 3.0
+   3.0^0.05 ≈ e^(0.05 * ln(3.0))
+   ln(3.0) ≈ 1.0986122886681098
+   0.05 * ln(3.0) ≈ 0.05493061443340549
+   e^(0.05493061443340549) ≈ 1.056467308549538
+   Therefore 3.0^1.05 ≈ 3.0 * 1.056467308549538 ≈ 3.169401925648614
+
+2) Effort = a * (KLOC)^b
+   Effort ≈ 2.4 * 3.169401925648614
+   Effort ≈ 7.606564621556673  (person-months)
+   Rounded for reporting: Effort ≈ 7.61 person-months
+
+3) Schedule (Months) = c * (Effort)^d
+   First compute (Effort)^d = 7.606564621556673^0.38
+   ln(7.606564621556673) ≈ 2.0281921462793356
+   0.38 * ln(7.606564621556673) ≈ 0.7713129952143735
+   e^(0.7713129952143735) ≈ 2.1619799024787734
+   Therefore (Effort)^d ≈ 2.1619799024787734
+   Schedule ≈ 2.5 * 2.1619799024787734 ≈ 5.404949756196933 months
+   Rounded for reporting: Schedule ≈ 5.40 months
+    </pre>
+
+    <div class="note">
+      <strong>Summary (rounded):</strong>
+      <ul>
+        <li>Estimated code size: <strong>3,000 LOC (3.0 KLOC)</strong></li>
+        <li>COCOMO Basic Effort ≈ <strong>7.61 person-months</strong></li>
+        <li>COCOMO Schedule ≈ <strong>5.40 months</strong></li>
+      </ul>
+    </div>
+
+    <h3>Interpretation / Practical note</h3>
+    <p>
+      COCOMO basic gives a rough engineering estimate. For student projects that use frameworks (React, Django, etc.), generated code, and libraries, the actual coding effort is often lower than raw COCOMO estimates because frameworks provide large amounts of reusable functionality. In your handwritten justification you should:
+    </p>
+    <ol>
+      <li>Mention that <em>MODP/TOOL/REUSE</em> factors (use of frameworks, libraries, templates) reduce actual effort.</li>
+      <li>Explain schedule pressure (SCED) if the semester deadline is tight.</li>
+      <li>State that COCOMO provides a baseline and that remaining discrepancy is justified by reuse and higher-level components.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>3. What to handwrite for Lab 3 (in your submission)</h2>
+    <p>Handwrite a short justification (6–8 lines) of selected cost drivers. Example lines to copy into your handwritten page:</p>
+    <pre>
+RELY (Required reliability): Nominal — important but not safety-critical.
+DATA (Database size): Low — expected moderate dataset (students, jobs).
+TIME (Execution time constraint): Low — not real-time.
+MODP (Use of modern practices/tools): High — using React/Django which speeds development.
+TOOL (Tool support): High — GitHub, CI planned.
+SCED (Schedule constraints): High — semester deadline increases pressure.
+    </pre>
+  </section>
+
+  <footer style="margin-top:28px; font-size:0.95rem; color:#444;">
+    <p>File generated for Lab 3 — LOC & COCOMO estimation. Save this as <code>Lab3.html</code>, commit to your repo and print the rendered page for submission.</p>
+    <p>If you want, I can also generate a ready-to-copy handwritten justification text formatted for printing (one A4 page) — tell me and I will prepare it.</p>
+  </footer>
+
+</body>
+</html>
